@@ -3,8 +3,7 @@ import {asyncHandler} from "../utils/asyncHandeler.js";
 const registerUser= asyncHandler (async (req, res) =>{
     const {fullName,email,username,password} = req.body
     if (
-        [fullName,email,username,password].some ((field)
-    =>field?.trim()=="")
+        [fullName,email,username,password].some ((field)=>field?.trim()=="")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -74,7 +73,7 @@ const {email, username, password} = req.body
    if (!isPasswordValid) {
     throw new ApiError(401, "Invalid user credentials")
     }
-    
+
     const {accessToken, refreshToken} = await generateAccessAndRefereshTokens(user._id)
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
@@ -84,6 +83,25 @@ const {email, username, password} = req.body
         secure: true
     }
 
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+        new ApiResponse(
+            200, 
+            {
+                user: loggedInUser, accessToken, refreshToken
+            },
+            "User logged In Successfully"
+        )
+    )
+
+})
 
 
-export {registerUser}
+
+export {
+    registerUser
+
+}
