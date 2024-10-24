@@ -7,3 +7,4 @@ import {
     togglePublishStatus,
     updateVideo,
 } from "../controllers/video.controller.js"
+import {verifyJWT} from "../middlewares/auth.middlewares.js"
